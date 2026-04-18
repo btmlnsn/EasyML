@@ -1,64 +1,76 @@
-# EasyML: A Window into AI by Bobby Tomlinson
+# EasyML
 
-## Overview
-EasyML is a programming language designed to provide an accessible medium for implementing simple machine learning models. In a world where AI and machine learning are major areas of interest across industries, EasyML aims to empower individuals from various backgrounds to explore predictive analytics using their data effortlessly. Whether you're a professional with limited technical skills or a seasoned programmer, EasyML offers a seamless and intuitive approach to leveraging data for predictive modeling.
+> A small domain-specific language and Python interpreter for loading tabular data, basic cleaning, and training a choice of two sklearn models—built as a final project for a programming class.
 
-## Design
-### Syntax
-EasyML's syntax is straightforward and tailored for ease of use. It avoids complex control structures and functions to prioritize readability and simplicity. This approach allows even novice users to write and understand machine learning code effectively.
+## What it is
 
-### Semantics
-EasyML supports essential machine learning-specific data types and executes instructions sequentially, making it easy to follow and interpret.
+EasyML runs `.ezml` scripts line by line: set a file path, load CSV or Excel, clean rows, optionally fit classification or regression (picking between two fixed model pairs), and export datasets or models to `exported/`. It is a learning exercise, not a production ML system.
 
-## Features
-EasyML primarily focuses on supervised learning tasks, and offers a range of features aimed at simplifying the machine learning process:
-- **Data Handling**: Users can work with tabular data in CSV or Excel formats.
-- **Data Cleaning**: Built-in functions enable users to clean datasets effortlessly.
-- **Model Training**: EasyML supports supervised learning for both numeric and categorical predictions.
-- **Model Evaluation**: Users can assess model performance using metrics tailored to the model type, such as accuracy, recall, mean absolute error, and R-squared.
-- **Model Selection**: EasyML trains multiple models and selects the one with the highest composite metric score for optimal performance.
+## Tech stack
 
-## How to Run EasyML Code
-1. Ensure you have Python 3 installed on your system.
-2. Clone this EasyML repository.
-3. Navigate to the directory containing the EasyML interpreter (`easyML.py`) and your EasyML code files.
-4. Unzip trainingData.zip, and ensure contents are located in the main project directory.
-6. Open a terminal or command prompt.
-7. Install the dependencies using the following command: Run  in the command
-  ```pip3 install -r requirements.txt```
-8. Run the EasyML code using the following command:
-  ```python3 easyML.py samplecodename.ezml```
+Python 3.11, pandas, scikit-learn (linear/logistic regression, decision tree classifier, random forest regressor), joblib, openpyxl (Excel). Dependencies are pinned in `environment.yml` and `requirements.txt`.
 
+## Prerequisites
 
-## Sample Implementations
+- [Miniconda](https://docs.conda.io/en/latest/miniconda.html) or [Anaconda](https://www.anaconda.com/) with `conda` on your `PATH`
+- Your own CSV/XLSX data if you run the samples (see `trainingData/README.md`)
 
-### 1. Data Cleaning - sample1.ezml
+## Setup
 
-**Explanation:**
-- This sample code showcases working with Excel data.
-- The dataset 'running.xlsx' is loaded into memory.
-- Data cleaning is performed to prepare the dataset for analysis.
-- The cleaned dataset is then saved for further analysis or modeling.
-- Blank entries are removed, and entries that differ from a column's average data type are removed.
+1. Clone this repository and `cd` into the project root (the directory that contains `easyML.py` and `environment.yml`).
+2. Create the environment:
+   ```bash
+   conda env create -f environment.yml
+   ```
+3. Activate it:
+   ```bash
+   conda activate undergrad-archive--easyml
+   ```
+4. Create an output directory (first `DOWNLOAD` will fail if it is missing):
+   ```bash
+   mkdir -p exported
+   ```
 
+## Usage
 
-### 2. Predicting Categorical Values (Classification) - sample2.ezml
+```bash
+conda activate undergrad-archive--easyml
+cd /path/to/EasyML
+python easyML.py your_script.ezml
+```
 
-**Explanation:**
-- This sample code demonstrates the process of predicting categorical values using a classification model.
-- The `DATAPATH` command specifies the path to the dataset file, which is 'Titanic.csv'.
-- The `DATASET` command loads the dataset into memory as `userDataCat`.
-- The `CLEAN` command cleans the dataset to remove any missing values or inconsistencies.
-- With the `MODEL` command, a regression model (`PREDICT_CAT`) is trained using the cleaned dataset, with the target variable located in column J.
-- Finally, the `DOWNLOAD` commands save the cleaned dataset and the trained classification model for future use.
+```text
+DATAPATH myPath = 'data/myfile.csv'
+DATASET myDf = LOAD myPath
+CLEAN myDf
+MODEL myModel = PREDICT_CAT(myDf, COLUMN J)
+DOWNLOAD DATASET myDf
+DOWNLOAD MODEL myModel
+```
 
+```text
+DATAPATH myPath = 'data/myfile.csv'
+DATASET myDf = LOAD myPath
+CLEAN myDf
+MODEL myModel = PREDICT_NUM(myDf, COLUMN I)
+DOWNLOAD DATASET myDf
+DOWNLOAD MODEL myModel
+```
 
-### 3. Predicting Numeric Values (Regression) - sample3.ezml
+## Sample scripts
 
-**Explanation:**
-- This sample code demonstrates the process of predicting numeric values using a regression model.
-- The `DATAPATH` command specifies the path to the dataset file, which is 'housing.csv'.
-- The `DATASET` command loads the dataset into memory as `userDataNum`.
-- The `CLEAN` command cleans the dataset to remove any missing values or inconsistencies.
-- With the `MODEL` command, a regression model (`PREDICT_NUM`) is trained using the cleaned dataset, with the target variable located in column I.
-- Finally, the `DOWNLOAD` commands save the cleaned dataset and the trained regression model for future use.
+- **sample1.ezml** — Loads `running.xlsx`, cleans, exports the dataset only.
+- **sample2.ezml** — Loads `Titanic.csv`, cleans, trains classification on `COLUMN J`, exports dataset and model.
+- **sample3.ezml** — Loads `housing.csv`, cleans, trains regression on `COLUMN I`, exports dataset and model.
+
+## Known limitations
+
+- One statement per line; whitespace splitting (`line.split()`). Targets use `COLUMN` letters (A=0, …). `PREDICT_CAT` vs `PREDICT_NUM`; paths with spaces are fragile.
+- No unit tests or CI; little error handling beyond a missing script file.
+- No datasets in the repo; samples assume files exist at the given `DATAPATH` (see `trainingData/README.md` for formats and public sources).
+- `exported/` is not created automatically.
+- Model choice and metrics are simplistic; multiclass and messy real-world tables can still break edge cases.
+
+## License
+
+Apache License 2.0 — see `LICENSE`.

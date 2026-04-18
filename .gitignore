@@ -1,12 +1,48 @@
-exported/*
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environments
+.env
+.venv/
+env/
+venv/
+
+# Conda
+environment.lock
+
+# Data files
 *.csv
 *.xlsx
+*.xls
+trainingData/*
+!trainingData/README.md
+
+# Exported outputs
+exported/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors
 .vscode/
-.venv/
-old/
-trainingData/
-*.csv
-old/
-.DS_store
+.cursor/
 
+# Logs
+*.log
+pip-log.txt
 
+old/

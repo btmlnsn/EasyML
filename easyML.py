@@ -11,13 +11,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, accuracy_score, precision_score, recall_score
 import joblib
 
-# Responsible for retrieving variables and updating program state with new variables
-def varmap(targetVar, state):
-    if targetVar in state:
-        return state[targetVar]
-    else:
-        raise ValueError("Error: Var not found")
-    
 # Accepts a datapath from user program as a string, cleans the string for use, and stores it in program state
 def createDatapath(parts, state):
     var = parts[1]
@@ -129,11 +122,11 @@ def catModel(modelParams, state):
     LogAccuracy = accuracy_score(y_test, yLogPred)
     DtAccuracy = accuracy_score(y_test, yDtPred)
 
-    LogPrecision = precision_score(y_test, yLogPred)
-    DtPrecision = precision_score(y_test, yDtPred)
+    LogPrecision = precision_score(y_test, yLogPred, average='weighted')
+    DtPrecision = precision_score(y_test, yDtPred, average='weighted')
 
-    LogRecall = recall_score(y_test, yLogPred)
-    DtRecall = recall_score(y_test, yDtPred)
+    LogRecall = recall_score(y_test, yLogPred, average='weighted')
+    DtRecall = recall_score(y_test, yDtPred, average='weighted')
 
     # Overall validation metrics are computed for each model to evaluate model effectiveness
     # Metric weights: 20% recall, 20% precision, 60% accuracy
@@ -211,7 +204,7 @@ def numModel(modelParams, state):
     finalRfMae = - ((RfMae - minMae)/rangeMae)
     
     LinR2 = r2_score(y_test, yLinPred)
-    RfR2 = r2_score(y_test, yLinPred)
+    RfR2 = r2_score(y_test, yRfPred)
 
     # Overall validation metrics are computed for each model to evaluate model effectiveness
     # Metric weights: 25% Mean Squared Error, 25% Mean Absolute Error, 50% R-Squared
