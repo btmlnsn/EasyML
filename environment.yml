@@ -1,4 +1,4 @@
-name: undergrad-archive--easyml
+name: undergrad-archive--cs420--easyml
 channels:
   - conda-forge
 dependencies:
